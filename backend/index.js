@@ -14,29 +14,31 @@ function executeQuery(query) {
 }
 
 function initializeTables () {
-  executeQuery("CREATE TABLE IF NOT EXISTS Queue(\
+  executeQuery('CREATE TABLE IF NOT EXISTS Queue(\
     id CHAR(6) NOT NULL,\
     name VARCHAR(25) NOT NULL,\
     description VARCHAR(150),\
     password CHAR(10) NOT NULL,\
     PRIMARY KEY(id)\
-  )");
+  )');
 
-  executeQuery("CREATE TABLE IF NOT EXISTS QueueMember(\
+  executeQuery('CREATE TABLE IF NOT EXISTS QueueMember(\
     id INT AUTO_INCREMENT,\
     name VARCHAR(25),\
     question VARCHAR(50),\
     QueueID CHAR(6) NOT NULL,\
     PRIMARY KEY(id),\
     FOREIGN KEY(QueueID) REFERENCES Queue(id)\
-  );");
+  );');
 }
 
 //generate a 6 digit room key
 function generateQueueID(){
 	var string = generator.generate({
     	length: 6,
-    	numbers: true
+    	numbers: true,
+      uppercase: false,
+      excludeSimilarCharacters:true,
 	});
 	return string;
 }
@@ -49,37 +51,38 @@ function generatePassword() {
 	return string;
 }
 
-function sendEmail(email) {
+function sendEmail(email, passwordToSend) {
 	//needs to be filled out
 	var transporter = nodemailer.createTransport({
-		service: '',
+		host: config.emailconfig.host,
+    port: config.emailconfig.port,
+    secure: config.emailconfig.secure,
 		auth: {
-			user: 'ssti@gmx.com',
-			pass: ''
+			user: config.emailconfig.username,
+			pass: config.emailconfig.password,
 		}
 	});
 
 	//text contains the 10 char randomly generated password
 	var mailOptions = {
-		from: 'ssti@gmx.com',//same as user from above
+		from: config.emailconfig.username,//same as user from above
 		to: email,
 		subject: 'Here is your password for HelpTrain',
-		text: generatePassword()
+		text: passwordToSend
 	};
 
 	transporter.sendMail(mailOptions, function(err, info){
 		if(err){
-			console.log(error);
+			console.log(err);
 		} else {
-			console.log('Ema')
+			console.log('Email Sent')
 		}
 	});
 }
 //provide email credentials, encompass this in a fucntion
 
-
 app.get('/', function(req, res){
-   res.send("Hello world!");
+   res.send('Hello world!');
 });
 
 app.listen(8080);
