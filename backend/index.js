@@ -6,13 +6,6 @@ var generator = require('generate-password');
 var app = express();
 var connection = mysql.createConnection(config.dbconfig);
 
-function executeQuery(query) {
-  connection.query(query, function (error, results) {
-    if (error) throw error;
-    return results;
-  });
-}
-
 function initializeTables () {
   executeQuery('CREATE TABLE IF NOT EXISTS Queue(\
     id CHAR(6) NOT NULL,\
@@ -85,15 +78,23 @@ function sendEmail(email, passwordToSend) {
 app.delete('/queuemembers/delete/(:id)', function(req, res) {
   connection.query('DELETE FROM QueueMember WHERE id = ?', [req.params.id], function (err, results) {
     if(err) throw error;
-      else{
-        res.send("Successfully deleted!")
-      }
+    else{
+      res.send('Successfully deleted!')
+    }
   })
 });
 
 //update Queue
 
-
+// Get members of a queue
+app.get('/queuemembers/get/(:QueueID)', function(req, res) {
+  connection.query('SELECT * FROM QueueMember m WHERE m.QueueID = ?', [req.params.QueueID], function(err, results) {
+    if (err) throw err;
+    else {
+      res.send(results);
+    }
+  })
+});
 
 app.get('/', function(req, res){
    res.send('Hello world!');
