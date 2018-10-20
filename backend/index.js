@@ -82,13 +82,13 @@ function sendEmail(email, passwordToSend) {
 
 
 //delete QueueMember
-app.delete('queuemembers/delete/(:id)', function(req, res, next) {
-    executeQuery('DELETE FROM QueueMember WHERE id = ' req.params.id); , function (err, results, fields) {
-        if(err) throw error;
-        else{
-          console.log("Successfully deleted!");
-        }
-    });
+app.delete('/queuemembers/delete/(:id)', function(req, res) {
+  connection.query('DELETE FROM QueueMember WHERE id = ?', [req.params.id], function (err, results) {
+    if(err) throw error;
+      else{
+        res.send("Successfully deleted!")
+      }
+  })
 });
 
 //update Queue
