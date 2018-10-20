@@ -79,7 +79,21 @@ function sendEmail(email, passwordToSend) {
 		}
 	});
 }
-//provide email credentials, encompass this in a fucntion
+
+
+//delete QueueMember
+app.delete('queuemembers/delete/(:id)', function(req, res, next) {
+    executeQuery('DELETE FROM QueueMember WHERE id = ' req.params.id); , function (err, results, fields) {
+        if(err) throw error;
+        else{
+          console.log("Successfully deleted!");
+        }
+    });
+});
+
+//update Queue
+
+
 
 app.get('/', function(req, res){
    res.send('Hello world!');
