@@ -1,0 +1,156 @@
+@import "../../scss/colors.scss";
+@import "../../scss/mediaQuery.scss";
+
+.content {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  color: $secondary;
+}
+.landingPage {
+  height: 100%;
+
+  p {
+    font-size: 20px;
+    z-index: 100;
+  }
+
+  .button {
+    border: none;
+    outline: none;
+    background-color: $secondary;
+    border-radius: 30px;
+    margin: 10px;
+    width: 200px;
+    height: 50px;
+
+    span {
+      color: $primary;
+      font-weight: bold;
+      font-size: 15px;
+    }
+  }
+  .button:hover {
+    background-color: darken( $primary, 5% );
+  }
+
+  a {
+    text-decoration: none;
+    color: $secondary;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    font-style: italic;
+    z-index: 100;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.title {
+  font-size: 80px;
+  z-index: 100;
+}
+.svgs {
+  img {
+    z-index: 0;
+  }
+  z-index: 0;
+}
+.svg {
+  position: absolute;
+}
+
+.buttons {
+  z-index: 100;
+}
+
+@include mobile {
+  /*background-color: green;*/
+  .svg {
+    display: none;
+  }
+}
+
+@include tablet {
+  /*background-color: red;*/
+  .largeRight {
+    left: 35%;
+    bottom: 25%;
+    transform: scale(.8);
+  }
+
+  .smallRight {
+    left: 40%;
+    bottom: 35%;
+    transform: scale(.6);
+  }
+
+  .largeLeft {
+    right: 35%;
+    top: 25%;
+    transform: rotate(180deg) scale(.8);
+  }
+
+  .smallLeft {
+    right: 40%;
+    top: 35%;
+    transform: rotate(180deg) scale(.6);
+  }
+}
+
+@include laptop {
+  /*background-color: blue;*/
+  .largeRight {
+    left: 30%;
+    bottom: -15%;
+  }
+
+  .smallRight {
+    transform: scale(.8);
+    left: 35%;
+    bottom: -5%;
+  }
+
+  .largeLeft {
+    right: 35%;
+    top: -10%;
+    transform: rotate(180deg);
+  }
+
+  .smallLeft {
+    transform: scale(.8);
+    right: 40%;
+    top: -5%;
+    transform: rotate(180deg);
+  }
+}
+
+@include desktop {
+  /*background-color: $blue;*/
+  .largeRight {
+    left: 30%;
+    bottom: -15%;
+  }
+
+  .smallRight {
+    transform: scale(.8);
+    left: 35%;
+    bottom: -5%;
+  }
+
+  .largeLeft {
+    right: 35%;
+    top: -10%;
+    transform: rotate(180deg);
+  }
+
+  .smallLeft {
+    transform: scale(.8);
+    right: 40%;
+    top: -5%;
+    transform: rotate(180deg);
+  }
+}
