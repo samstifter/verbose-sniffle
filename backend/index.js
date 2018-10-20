@@ -5,10 +5,12 @@ var app = express();
 
 var connection = mysql.createConnection(config.dbconfig);
 
-connection.connect((err) => {
-  if (err) throw err;
-  console.log("Connected to db");
-});
+function executeQuery(query) {
+  connection.query(query, function (error, results) {
+    if (error) throw error;
+    return results;
+  });
+}
 
 app.get('/', function(req, res){
    res.send("Hello world!");
