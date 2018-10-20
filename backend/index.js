@@ -3,11 +3,8 @@ var mysql = require('mysql');
 var config = require('./config.js');
 var app = express();
 
-var connection = mysql.createConnection({
-  host: "localhost",
-  user: config.dbUser,
-  password: config.dbPassword
-});
+var connection = mysql.createConnection(config.dbconfig);
+
 
 connection.connect((err) => {
   if (err) throw err;

@@ -1,1 +1,5 @@
-exports.config = {dbUser : "DB_USERNAME_HERE", dbPassword : "DB_PASSWORD_HERE"}
+exports.dbconfig = {
+  host: "DB_HOST",
+  user: "DB_USER",
+  password: "DB_PASSWORD"
+}
