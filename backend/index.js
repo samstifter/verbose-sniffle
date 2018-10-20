@@ -84,16 +84,33 @@ function sendEmail(email, passwordToSend) {
 //delete QueueMember
 app.delete('/queuemembers/delete/(:id)', function(req, res) {
   connection.query('DELETE FROM QueueMember WHERE id = ?', [req.params.id], function (err, results) {
-    if(err) throw error;
+    if(err) throw err;
       else{
-        res.send("Successfully deleted!")
+        res.send("Successfully deleted a QueueMember!")
+      }
+  })
+});
+
+//delete Queue
+app.delete('/queue/delete/(:id)', function(req, res) {
+  connection.query('DELETE FROM Queue WHERE id = ?', [req.params.id], function (err, results) {
+    if(err) throw err;
+      else{
+        res.send("Successfully deleted a Queue!")
       }
   })
 });
 
 //update Queue
-
-
+app.put('/queue/:id', function(req, res) {
+  connection.query('UPDATE Queue SET Name = ' + req.body.Name + ' , Set Description  = ' + req.body.Description
+  + 'WHERE id = ' + req.body.id , function (err, results) {
+    if(err) throw err;
+      else{
+        res.send("Successfully updated a Queue!")
+      }
+  })
+});
 
 app.get('/', function(req, res){
    res.send('Hello world!');
