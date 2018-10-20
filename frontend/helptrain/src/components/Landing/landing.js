@@ -6,9 +6,9 @@ import './landing.scss'
 const Landing = (props) => {
   return (
     <div className='landingPage'>
-      Landing
+      <h1>Landing</h1>
     </div>
   )
 }
 
-export default Home;
+export default Landing;
