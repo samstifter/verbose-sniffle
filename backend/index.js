@@ -96,6 +96,16 @@ app.get('/queuemembers/get/(:QueueID)', function(req, res) {
   })
 });
 
+// Get a Queue by ID
+app.get('/queue/get/(:id)', function(req, res) {
+  connection.query('SELECT * FROM Queue q WHERE q.id = ?', [req.params.id], function(err, results) {
+    if (err) throw err;
+    else {
+      res.send(results);
+    }
+  })
+});
+
 app.get('/', function(req, res){
    res.send('Hello world!');
 });
