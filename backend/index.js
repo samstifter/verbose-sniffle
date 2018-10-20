@@ -12,6 +12,25 @@ function executeQuery(query) {
   });
 }
 
+function initializeTables () {
+  executeQuery("CREATE TABLE IF NOT EXISTS Queue(\
+    id CHAR(6) NOT NULL,\
+    name VARCHAR(25) NOT NULL,\
+    description VARCHAR(150),\
+    password CHAR(10) NOT NULL,\
+    PRIMARY KEY(id)\
+  )");
+
+  executeQuery("CREATE TABLE IF NOT EXISTS QueueMember(\
+    id INT AUTO_INCREMENT,\
+    name VARCHAR(25),\
+    question VARCHAR(50),\
+    QueueID CHAR(6) NOT NULL,\
+    PRIMARY KEY(id),\
+    FOREIGN KEY(QueueID) REFERENCES Queue(id)\
+  );");
+}
+
 app.get('/', function(req, res){
    res.send("Hello world!");
 });
