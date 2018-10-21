@@ -164,9 +164,5 @@ app.put('/queues/update/(:id)', function(req, res) {
   })
 });
 
-app.get('/', function(req, res){
-   res.send('Hello world!');
-});
-
 initializeTables();
 app.listen(8080);
