@@ -108,6 +108,20 @@ app.get('/queues/get/(:id)', function(req, res) {
   })
 });
 
+// New Queue
+app.post('/queues/new', function(req, res) {
+  var query = 'INSERT INTO Queue VALUES(?, ?, ?, ?)';
+  var generatedId = generateQueueID();
+  var generatedPassword = generatePassword();
+  connection.query(query, [generatedId, req.body.Name, req.body.Description, generatedPassword], function (err, results) {
+    if(err) throw err;
+      else{
+        sendEmail(req.body.Email, generatedPassword)
+        res.send({id: generatedId, password: generatedPassword});
+      }
+  })
+});
+
 //delete Queue
 app.delete('/queues/delete/(:id)', function(req, res) {
   connection.query('DELETE FROM QueueMember WHERE QueueID = ?', [req.params.id], function (err, results) {
