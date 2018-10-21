@@ -9,22 +9,29 @@ var connection = mysql.createConnection(config.dbconfig);
 app.use(bodyParser.json());
 
 function initializeTables () {
-  executeQuery('CREATE TABLE IF NOT EXISTS Queue(\
-    id CHAR(6) NOT NULL,\
-    name VARCHAR(25) NOT NULL,\
-    description VARCHAR(150),\
-    password CHAR(10) NOT NULL,\
+  query = 'CREATE TABLE IF NOT EXISTS Queue(\
+    ID CHAR(6) NOT NULL,\
+    Name VARCHAR(25) NOT NULL,\
+    Description VARCHAR(150),\
+    Password CHAR(10) NOT NULL,\
     PRIMARY KEY(id)\
-  )');
+  )';
+  connection.query(query, function (err, results) {
+    if (err) throw err;
+  });
 
-  executeQuery('CREATE TABLE IF NOT EXISTS QueueMember(\
-    id INT AUTO_INCREMENT,\
-    name VARCHAR(25),\
-    question VARCHAR(50),\
+  query = 'CREATE TABLE IF NOT EXISTS QueueMember(\
+    ID INT AUTO_INCREMENT,\
+    Name VARCHAR(25) NOT NULL,\
+    Question VARCHAR(50),\
+    TimeAdded TIMESTAMP NOT NULL,\
     QueueID CHAR(6) NOT NULL,\
     PRIMARY KEY(id),\
     FOREIGN KEY(QueueID) REFERENCES Queue(id)\
-  );');
+  );';
+  connection.query(query, function (err, results) {
+    if (err) throw err;
+  });
 }
 
 //generate a 6 digit room key
@@ -90,7 +97,7 @@ app.delete('/queuemembers/delete/(:id)', function(req, res) {
 
 // Get members of a queue
 app.get('/queuemembers/get/(:QueueID)', function(req, res) {
-  connection.query('SELECT * FROM QueueMember m WHERE m.QueueID = ?', [req.params.QueueID], function(err, results) {
+  connection.query('SELECT * FROM QueueMember m WHERE m.QueueID = ? ORDER BY TimeAdded ASC', [req.params.QueueID], function(err, results) {
     if (err) throw err;
     else {
       res.send(results);
@@ -151,4 +158,5 @@ app.get('/', function(req, res){
    res.send('Hello world!');
 });
 
+initializeTables();
 app.listen(8080);
