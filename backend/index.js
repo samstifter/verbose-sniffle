@@ -4,9 +4,11 @@ var mysql = require('mysql');
 var config = require('./config.js');
 var nodemailer = require('nodemailer');
 var generator = require('generate-password');
+var cors = require('cors');
 var app = express();
 var connection = mysql.createConnection(config.dbconfig);
 app.use(bodyParser.json());
+app.use(cors());
 
 function initializeTables () {
   query = 'CREATE TABLE IF NOT EXISTS Queue(\
