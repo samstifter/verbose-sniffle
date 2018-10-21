@@ -82,6 +82,16 @@ function sendEmail(email, passwordToSend) {
 	});
 }
 
+// New Queue Member
+app.post('/queuemembers/new', function(req, res) {
+  var query = "INSERT INTO QueueMember (Name, Question, QueueID) VALUES (?, ?, ?)"
+  connection.query(query, [req.body.Name, req.body.Question, req.body.QueueID], function(err, results) {
+    if (err) throw err;
+    else {
+      res.send('Added a Person!');
+    }
+  })
+});
 
 //delete QueueMember
 app.delete('/queuemembers/delete/(:id)', function(req, res) {
