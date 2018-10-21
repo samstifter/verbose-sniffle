@@ -3,7 +3,7 @@ import React from 'react'
 import { Redirect } from "react-router-dom";
 
 import StudentLogin from './Student/studentLogin.js'
-import TALanding from './TA/taLogin.js'
+import TALogin from './TA/taLogin.js'
 
 import './login.scss'
 
@@ -12,7 +12,7 @@ const Login = (props) => {
   if(user === 'TA') {
     return (
       <div className='loginPage'>
-        <TALanding/>
+        <TALogin/>
       </div>
     )
   }

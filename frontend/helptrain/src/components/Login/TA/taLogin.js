@@ -5,7 +5,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import './taLogin.scss'
 
-//choose,create,info,login
+const LoginStateMachine = {
+  initial: 'choose',
+  states: {
+    choose: {
+      on: { NEXT: 'create' }
+    },
+    create: {
+      on: { NEXT: 'info', PREV: 'initial' }
+    },
+    info: {
+      on: { NEXT: 'login', PREV: 'create' }
+    },
+    login: {
+      on: { NEXT: 'home', PREV: 'info' }
+    }
+  }
+};
 
 class TALogin extends React.Component {
   state = {
@@ -16,16 +32,31 @@ class TALogin extends React.Component {
     loginState: 'choose'
   }
 
+  componentDidMount() {
+    /*
+    const transition = (state, action) => {
+      try {
+        return LoginStateMachine.states[state].on[action];
+      } catch (e) {
+        return undefined;
+      }
+    }
+    const emit = (action) => (e) => {
+      const nextState = transition(this.state.machineState, action);
+      console.log(action, this.state.machineState, nextState);
+      if (nextState) {
+        //update(nextState);
+      }
+    }
+    */
+  }
+
   newSession = () => {
-    this.setState({
-      loginState: 'create'
-    })
+
   }
 
   login = () => {
-    this.setState({
-      loginState: 'login'
-    })
+
   }
 
   render () {

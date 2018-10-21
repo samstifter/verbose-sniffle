@@ -54,7 +54,7 @@ class StudentLogin extends React.Component {
     return (
       <div className='studentLoginPage'>
         {/*<img src={Top} className='topSVG'/>*/}
-        <div className='faIcon'><FontAwesomeIcon icon="train" /></div>
+        <div className='faIcon__studentLogin'><FontAwesomeIcon icon="train" /></div>
         <h1>Welcome!</h1>
         <form onSubmit={this.handleSubmit}>
           <label>
