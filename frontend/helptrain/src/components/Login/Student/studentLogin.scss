@@ -1,17 +1,30 @@
+@import "../../../scss/colors.scss";
+
+h1 {
+  color: $secondary;
+}
+
+label {
+  color: $secondary;
+}
+
+input {
+  border-radius: 10px;
+  width: 50%;
+  height: 25px;
+}
+
 .topSVG {
   position: absolute;
   bottom: 70%;
   left: 0%;
   width: 100%;
 }
-/*
-.faIcon {
-  position: absolute;
-  left: 0%;
-  width: 100%;
-  font-size: 60px;
+
+.faIcon__studentLogin {
+  font-size: 90px;
+  color: $secondary;
 }
-*/
 form {
   display: flex;
   flex-direction: column;
