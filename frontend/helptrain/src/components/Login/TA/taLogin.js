@@ -97,16 +97,27 @@ class TALogin extends React.Component {
       Name: this.state.name,
       Description: this.state.description
     })
-    let response = await fetch(`http://138.68.55.179:8080/queues/new/`, {
+
+    let error, response;
+    [err, response] = await to(fetch(`http://138.68.55.179:8080/queues/new/`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: body
-    });
+    }));
     if(!response.ok) {
       console.error(response);
+
+      this.setState({
+        postError: 'Error Creating Queue, Try again',
+        createSessionState: '--error'
+      })
+    }
+    else if(err) {
+      console.error(err);
+
       this.setState({
         postError: 'Error Creating Queue, Try again',
         createSessionState: '--error'
