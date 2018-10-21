@@ -1,0 +1,25 @@
+.topSVG {
+  position: absolute;
+  bottom: 70%;
+  left: 0%;
+  width: 100%;
+}
+/*
+.faIcon {
+  position: absolute;
+  left: 0%;
+  width: 100%;
+  font-size: 60px;
+}
+*/
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+
+  input {
+    border: none;
+    outline: none;
+  }
+}

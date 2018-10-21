@@ -1,0 +1,32 @@
+@import "../../scss/colors.scss";
+
+.aboutPage {
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.faIcon__about {
+  color: $secondary;
+  cursor: pointer;
+  font-size: 90px;
+}
+
+.faIcon__about:hover {
+  color: darken($secondary, 10%);
+}
+
+.aboutContent {
+  background-color: $secondary;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 80%;
+  overflow-y: auto;
+  border-top-left-radius: 20px;
+  text-align: left;
+  padding: 20px;
+}
+
+h1 {
+  color: $primary;
+}

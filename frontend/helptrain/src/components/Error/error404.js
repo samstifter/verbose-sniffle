@@ -4,7 +4,8 @@ import React from 'react'
 const Error404 = (props) => {
   return (
     <div className='error404Page'>
-      Error404
+      <h1>Error 404</h1>
+      <h1>Sorry :()</h1>
     </div>
   )
 }
