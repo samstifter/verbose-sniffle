@@ -156,7 +156,7 @@ app.delete('/queues/delete/(:id)', function(req, res) {
 
 //update Queue
 app.put('/queues/update/(:id)', function(req, res) {
-  connection.query('UPDATE Queue SET Name = ?, Description  = ? WHERE id = ?', [req.body.Name, req.body.Description, req.body.id], function (err, results) {
+  connection.query('UPDATE Queue SET Name = ?, Description  = ? WHERE id = ?', [req.body.Name, req.body.Description, req.param.id], function (err, results) {
     if(err) throw err;
       else{
         res.send("Successfully updated a Queue!")
