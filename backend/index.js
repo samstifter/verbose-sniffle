@@ -1,10 +1,12 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var config = require('./config.js');
 var nodemailer = require('nodemailer');
 var generator = require('generate-password');
 var app = express();
 var connection = mysql.createConnection(config.dbconfig);
+app.use(bodyParser.json());
 
 function initializeTables () {
   executeQuery('CREATE TABLE IF NOT EXISTS Queue(\
@@ -77,8 +79,8 @@ function sendEmail(email, passwordToSend) {
 //delete QueueMember
 app.delete('/queuemembers/delete/(:id)', function(req, res) {
   connection.query('DELETE FROM QueueMember WHERE id = ?', [req.params.id], function (err, results) {
-    if(err) throw error;
-    else{
+    if(err) throw err;
+    else {
       res.send('Successfully deleted!')
     }
   })
@@ -97,12 +99,37 @@ app.get('/queuemembers/get/(:QueueID)', function(req, res) {
 });
 
 // Get a Queue by ID
-app.get('/queue/get/(:id)', function(req, res) {
+app.get('/queues/get/(:id)', function(req, res) {
   connection.query('SELECT * FROM Queue q WHERE q.id = ?', [req.params.id], function(err, results) {
     if (err) throw err;
     else {
       res.send(results);
     }
+  })
+});
+
+//delete Queue
+app.delete('/queues/delete/(:id)', function(req, res) {
+  connection.query('DELETE FROM QueueMember WHERE QueueID = ?', [req.params.id], function (err, results) {
+    if(err) throw err;
+    else{
+      connection.query('DELETE FROM Queue WHERE id = ?', [req.params.id], function (err, results) {
+        if(err) throw err;
+          else{
+            res.send("Successfully deleted a Queue!")
+          }
+      });
+    }
+  });
+});
+
+//update Queue
+app.put('/queues/update/(:id)', function(req, res) {
+  connection.query('UPDATE Queue SET Name = ?, Description  = ? WHERE id = ?', [req.body.Name, req.body.Description, req.body.id], function (err, results) {
+    if(err) throw err;
+      else{
+        res.send("Successfully updated a Queue!")
+      }
   })
 });
 
