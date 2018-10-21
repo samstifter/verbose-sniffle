@@ -28,9 +28,9 @@ class StudentHome extends React.Component {
   }
 
   fetchQueueMembers = async() => {
-    console.log("Fetching Queue");
     let response = await fetch(`http://138.68.55.179:8080/queuemembers/get/${this.props.queue.ID}`)
     let data = await response.json();
+    console.log(data);
     this.setState({
       members: data
     })
@@ -74,7 +74,7 @@ class StudentHome extends React.Component {
   render () {
     let members = this.state.members;
     let queue;
-    if(members !== null) {
+    if(members !== null && members.length > 0) {
       queue = members.map((member,i) => {
         if(i === 0) return null;//This is the current person
         return (
@@ -92,6 +92,7 @@ class StudentHome extends React.Component {
 
     return (
       <div className='studentHomePage'>
+        <h1>Student</h1>
         <div className='studentHomePage__SessionInfo'>
           <span className='title'>Session: {this.props.queue.Name}</span>
           <br/>
@@ -108,7 +109,7 @@ class StudentHome extends React.Component {
 
           <div className='studentHomePage__Current'>
             {
-              members !== null && members[0] !== null
+              members !== null && members.length > 0
               &&
               <div>
                 <h3>Current</h3>

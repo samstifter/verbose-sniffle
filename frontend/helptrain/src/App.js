@@ -8,14 +8,14 @@ import { Landing, Home, Login, About } from './components'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrain, faUser,faArrowLeft, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faTrain, faUser,faArrowLeft, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons'
 
 
 import Demo from './components/Demo.js'
 //SASS Imports
 import './App.scss';
 
-library.add(faTrain,faUser,faArrowLeft,faCopy)
+library.add(faTrain,faUser,faArrowLeft,faCopy,faCheck)
 
 class App extends Component {
   state = {

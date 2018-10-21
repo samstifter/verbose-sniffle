@@ -25,7 +25,9 @@ const Home = (props) => {
     return (
       <div className='homePage'>
         <Util.BackButton/>
-        <TAHome/>
+        <TAHome
+          queue={props.queue}
+        />
       </div>
     )
   }

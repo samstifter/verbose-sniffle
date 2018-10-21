@@ -39,3 +39,51 @@
 .copyIDText:active {
   color: darken($secondary, 20%);
 }
+
+.taLoginBtns {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+
+  button  {
+    border: none;
+    outline: none;
+    background-color: $secondary;
+    border-radius: 20px;
+    width: 150px;
+    height: 50px;
+    margin: 10px;
+
+    color: $primary;
+    font-size: 20px;
+  }
+
+  button:hover  {
+    background-color: darken($secondary, 10%);
+  }
+}
+input {
+  padding: 5px;
+}
+
+.faIcon {
+  color: $secondary;
+}
+
+.loginSessionButton {
+  border: none;
+  outline: none;
+  background-color: $secondary;
+  border-radius: 20px;
+  width: 150px;
+  height: 50px;
+  margin: 10px;
+
+  font-weight: bold;
+
+  color: $primary;
+  font-size: 20px;
+}
+.loginSessionButton:hover {
+  background-color: darken($secondary, 10%);
+}

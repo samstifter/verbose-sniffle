@@ -14,7 +14,9 @@ const Login = (props) => {
     return (
       <div className='loginPage'>
         <Util.BackButton/>
-        <TALogin/>
+        <TALogin
+          setQueue={props.setQueue}
+        />
       </div>
     )
   }

@@ -2,6 +2,7 @@ import React from 'react'
 import to from 'await-to-js';
 //import PropTypes from 'prop-types'
 import Top from '../../../media/svg/top.svg'
+import { history, routes } from '../../../history.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import './taLogin.scss'
@@ -14,9 +15,6 @@ const LoginStateMachine = {
     },
     create: {
       on: { NEXT: 'info', PREV: 'initial' }
-    },
-    info: {
-      on: { NEXT: 'home', PREV: 'create' }
     },
     login: {
       on: { NEXT: 'home', PREV: 'choose' }
@@ -34,7 +32,9 @@ class TALogin extends React.Component {
     error: null,
     createSessionState: '',
     loginSessionState: '',
-    sessionID: null
+    sessionID: null,
+    sessionPassword: null,
+    loginSessionID: ''
   }
 
   componentDidMount() {
@@ -74,6 +74,7 @@ class TALogin extends React.Component {
   }
 
   nextState = () => {
+    console.log(this.transition(this.state.loginState,'NEXT'));
     this.setState({
       loginState: this.transition(this.state.loginState,'NEXT')
     })
@@ -91,7 +92,14 @@ class TALogin extends React.Component {
 
   createSession = async() => {
     if(this.state.createSessionState === '--success') {//After success move on
-      this.nextState();
+      this.props.setQueue({
+        Description: this.state.description,
+        ID: this.state.sessionID,
+        Name: this.state.name,
+        Password: this.state.sessionPassword
+      })
+      history.push(routes._HOME);
+      return;
     }
 
     //clear Errors
@@ -139,6 +147,7 @@ class TALogin extends React.Component {
         postError: 'Error Creating Queue, Try again',
         createSessionState: '--error'
       })
+
     }
     else if(!response.ok) {
       console.error(response);
@@ -154,9 +163,9 @@ class TALogin extends React.Component {
       console.log(data);
       this.setState({
         createSessionState: '--success',
-        sessionID: data.id
+        sessionID: data.id,
+        sessionPassword: data.password
       })
-      //this.nextState();
     }
   }
 
@@ -166,7 +175,7 @@ class TALogin extends React.Component {
     })
   }
 
-  loginSession = () => {
+  loginSession = async() => {
     if(this.state.loginSessionState === '--success') {//After success move on
       this.nextState();
     }
@@ -185,6 +194,14 @@ class TALogin extends React.Component {
       return;
     }
 
+    if(this.state.loginSessionID.length === 0) {
+      this.setState({
+        error: 'Please Input Session ID',
+        loginSessionState: '--error'
+      })
+      return;
+    }
+
     //Set loading State
     this.setState({
       loginSessionState: '--loading'
@@ -192,50 +209,39 @@ class TALogin extends React.Component {
 
     //================================Cant do anything with password to check==========================
     let err, response;
-    /*
-    let body = JSON.stringify({
 
-    })
 
-    [err, response] = await to(fetch(`http://138.68.55.179:8080/queues/new/`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: body
-    }));
+    [err, response] = await to(fetch(`http://138.68.55.179:8080/queues/get/${this.state.loginSessionID}`))
 
-    if(!response.ok) {
-      console.error(response);
-
-      this.setState({
-        postError: 'Error Logging In, Try again',
-        loginSessionState: '--error'
-      })
-    }
-    else if(err) {
+    if(err) {
       console.error(err);
 
       this.setState({
-        postError: 'Error Creating Queue, Try again',
+        postError: 'Error Getting Queue, Try again',
         createSessionState: '--error'
+      })
+    }
+    else if(!response.ok) {
+      console.error(response);
+
+      this.setState({
+        postError: 'Error Getting Queue, Try again',
+        loginSessionState: '--error'
       })
     }
     else {
       //Good response
       let data = await response.json();
-      console.log(data);
+      console.log(data[0]);
       this.setState({
-        createSessionState: '--success',
+        loginSessionState: '--success',
         sessionID: data.id
       })
+
+      this.props.setQueue(data[0])
+      history.push(routes._HOME)
       //this.nextState();
     }
-    */
-    this.setState({
-      createSessionState: '--success',
-    })
     //this.nextState();
   }
 
@@ -257,6 +263,8 @@ class TALogin extends React.Component {
   }
 
   render () {
+    console.log("Login Sstatus");
+    console.log(this.state.loginState);
     let createButtonText;
     switch (this.state.createSessionState) {
       case '--success':
@@ -290,8 +298,10 @@ class TALogin extends React.Component {
     const Choose = (
       <React.Fragment>
         <h1>Choose</h1>
-        <button onClick={this.newSession}>New Session</button>
-        <button disabled onClick={this.login}>Login</button>
+        <div className='taLoginBtns'>
+          <button onClick={this.newSession}>New Session</button>
+          <button onClick={this.login}>Login</button>
+        </div>
       </React.Fragment>
     );
 
@@ -324,20 +334,24 @@ class TALogin extends React.Component {
         {
           this.state.sessionID
           &&
-          <h2 className='sessionID'>Session ID: {this.state.sessionID}
-            <span
-              className='copyIDText'
-              onClick={this.copyIDText}>
-              <FontAwesomeIcon icon="copy"/>
-            </span>
-          </h2>
-        }
-      </React.Fragment>
-    );
+          <div>
+            <h2 className='sessionID'>Session ID: {this.state.sessionID}
+              <span
+                className='copyIDText'
+                onClick={this.copyIDText}>
+                <FontAwesomeIcon icon="copy"/>
+              </span>
+            </h2>
+            {/*
+              <h1>Enter Info</h1>
+              <p>We'll email you a password to access the Session later</p>
+              <label>Email</label>
+              <input type='email' />
+              <button>Send</button>
+            */}
 
-    const Info = (
-      <React.Fragment>
-        <h1>Info</h1>
+          </div>
+        }
       </React.Fragment>
     );
 
@@ -345,6 +359,13 @@ class TALogin extends React.Component {
       <React.Fragment>
         <h1>Login</h1>
           <form onSubmit={(e) => e.preventDefault()}>
+            <label>Session ID</label>
+            <input
+              type='text'
+              name="loginSessionID"
+              value={this.state.loginSessionID}
+              onChange={this.handleInputChange}
+            />
             <label>Password</label>
             <input
               type='password'
@@ -368,9 +389,6 @@ class TALogin extends React.Component {
         break;
       case 'create':
         component = Create;
-        break;
-      case 'info':
-        component = Info;
         break;
       case 'login':
         component = Login;
