@@ -96,7 +96,7 @@ app.post('/queuemembers/new', function(req, res) {
 });
 
 //delete QueueMember
-app.delete('/queuemembers/delete/(:id)', function(req, res) {
+app.post('/queuemembers/delete/(:id)', function(req, res) {
   connection.query('DELETE FROM QueueMember WHERE id = ?', [req.params.id], function (err, results) {
     if(err) throw err;
     else {
@@ -142,7 +142,7 @@ app.post('/queues/new', function(req, res) {
 });
 
 //delete Queue
-app.delete('/queues/delete/(:id)', function(req, res) {
+app.post('/queues/delete/(:id)', function(req, res) {
   connection.query('DELETE FROM QueueMember WHERE QueueID = ?', [req.params.id], function (err, results) {
     if(err) throw err;
     else{
