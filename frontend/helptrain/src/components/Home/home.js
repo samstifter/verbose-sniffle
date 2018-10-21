@@ -7,6 +7,8 @@ import { history, routes } from '../../history.js'
 
 import { Redirect } from "react-router-dom";
 
+import { Util } from '../index.js'
+
 import './home.scss'
 
 const Home = (props) => {
@@ -22,6 +24,7 @@ const Home = (props) => {
   if(userType === 'TA') {
     return (
       <div className='homePage'>
+        <Util.BackButton/>
         <TAHome/>
       </div>
     )
@@ -29,6 +32,7 @@ const Home = (props) => {
   else if(userType === 'Student') {
     return (
       <div className='homePage'>
+        <Util.BackButton/>
         <StudentHome
           queue={props.queue}
           userName={props.userName}

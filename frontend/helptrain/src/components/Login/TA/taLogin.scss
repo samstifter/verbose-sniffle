@@ -1,12 +1,41 @@
-.createSessionButton {
+@import "../../../scss/colors.scss";
 
+.createSessionButton {
+  border: none;
+  outline: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: $secondary;
+  margin: 10px;
+}
+.createSessionButton:hover {
+  background-color: darken($secondary, 5%);
 }
 .--error {
   background-color: red;
 }
-.--loading {
-  background-color: blue;
+.--error:hover {
+  background-color: darken(red, 5%);
 }
+
+.--loading {
+  background-color: blue !important;
+}
+
 .--success {
   background-color: green;
+}
+.--success:hover {
+  background-color: darken(green, 5%);
+}
+
+.copyIDText {
+  color: $secondary;
+}
+.copyIDText:hover {
+  color: darken($secondary, 10%);
+}
+.copyIDText:active {
+  color: darken($secondary, 20%);
 }
