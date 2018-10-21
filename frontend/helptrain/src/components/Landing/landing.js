@@ -13,7 +13,7 @@ import './landing.scss'
 class Landing extends React.Component {
   navagete = (route,user) => {
     //set student or ta
-    this.props.setUser(user);
+    this.props.setUserType(user);
     history.push(route);
   }
 

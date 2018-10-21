@@ -8,31 +8,60 @@ import { Landing, Home, Login, About } from './components'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrain } from '@fortawesome/free-solid-svg-icons'
+import { faTrain, faUser,faArrowLeft, faCopy } from '@fortawesome/free-solid-svg-icons'
 
 
 import Demo from './components/Demo.js'
 //SASS Imports
 import './App.scss';
 
-library.add(faTrain)
+library.add(faTrain,faUser,faArrowLeft,faCopy)
 
 class App extends Component {
   state = {
-    user: ''
+    userType: '',
+    queue: {},
+    userName: ''
   }
 
-  setUser = (userState) => {
+  setUserType = (userType) => {
     this.setState({
-      user: userState
+      userType: userType
     })
   }
 
+  setQueue = (queue) => {
+    this.setState({
+      queue: queue
+    })
+  }
+
+  setUserName = (userName) => {
+    this.setState({
+      userName: userName
+    })
+  }
 
   render() {
-    const WrapLanding = () => <Landing setUser={this.setUser} user={this.state.user}/>
-    const WrapHome = () => <Home setUser={this.setUser} user={this.state.user}/>
-    const WrapLogin = () => <Login setUser={this.setUser} user={this.state.user}/>
+    const WrapLanding = () =>
+    <Landing
+      setUserType={this.setUserType}
+    />
+
+    const WrapHome = () =>
+    <Home
+      userType={this.state.userType}
+      queue={this.state.queue}
+      userName={this.state.userName}
+    />
+
+    const WrapLogin = () =>
+    <Login
+      userType={this.state.userType}
+      setQueue={this.setQueue}
+      setUserName={this.setUserName}
+    />
+
     return (
       <Router history={history}>
         <div className="App">

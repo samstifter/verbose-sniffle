@@ -29,34 +29,105 @@ class TALogin extends React.Component {
     description: '',
     email: '',
     password: '',
-    loginState: 'choose'
+    loginState: 'choose',
+    error: null,
+    createSessionState: '',
+    sessionID: null
   }
 
-  componentDidMount() {
-    /*
-    const transition = (state, action) => {
-      try {
-        return LoginStateMachine.states[state].on[action];
-      } catch (e) {
-        return undefined;
-      }
+  handleInputChange = (e) => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  transition = (state, action) => {
+    try {
+      return LoginStateMachine.states[state].on[action];
+    } catch (e) {
+      return undefined;
     }
-    const emit = (action) => (e) => {
-      const nextState = transition(this.state.machineState, action);
-      console.log(action, this.state.machineState, nextState);
-      if (nextState) {
-        //update(nextState);
-      }
-    }
-    */
+  }
+
+  nextState = () => {
+    this.setState({
+      loginState: this.transition(this.state.loginState,'NEXT')
+    })
+  }
+
+  prevState = () => {
+    this.setState({
+      loginState: this.transition(this.state.loginState,'PREV')
+    })
   }
 
   newSession = () => {
+    this.nextState();
+  }
 
+  createSession = async() => {
+    if(this.state.createSessionState === '--success') {//After success move on
+      this.nextState();
+    }
+
+    //clear Errors
+    this.setState({
+      postError: '',
+      createSessionState: ''
+    })
+
+    if(!this.state.name || this.state.name.length === 0) {
+      this.setState({
+        error: 'Please Input a Session Name',
+        createSessionState: '--error'
+      })
+      return;
+    }
+
+    //Set loading State
+    this.setState({
+      createSessionState: '--loading'
+    })
+
+    let body = JSON.stringify({
+      Name: this.state.name,
+      Description: this.state.description
+    })
+    let response = await fetch(`http://138.68.55.179:8080/queues/new/`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: body
+    });
+    if(!response.ok) {
+      console.error(response);
+      this.setState({
+        postError: 'Error Creating Queue, Try again',
+        createSessionState: '--error'
+      })
+    }
+    else {
+      //Good response
+      let data = await response.json();
+      console.log(data);
+      this.setState({
+        createSessionState: '--success',
+        sessionID: data.id
+      })
+      //this.nextState();
+    }
   }
 
   login = () => {
-
+    this.setState({
+      loginState: 'login'
+    })
   }
 
   render () {
@@ -72,9 +143,30 @@ class TALogin extends React.Component {
     const Create = (
       <React.Fragment>
         <h1>Create Session</h1>
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <label>Name</label>
+          <input
+            type='text'
+            name="name"
+            value={this.state.name}
+            onChange={this.handleInputChange}
+          />
 
+        <label>Description</label>
+          <input
+            type='text'
+            name="description"
+            value={this.state.description}
+            onChange={this.handleInputChange}
+          />
+        <button className={`createSessionButton ${this.state.createSessionState}`} onClick={this.createSession}>Create</button>
         </form>
+
+        {
+          this.state.sessionID
+          &&
+          <h2>Session ID: {this.state.sessionID}</h2>
+        }
       </React.Fragment>
     );
 
@@ -99,13 +191,10 @@ class TALogin extends React.Component {
         component = Create;
         break;
       case 'info':
-        component = null;
+        component = Info;
         break;
       case 'login':
-        component = null;
-        break;
-      case 'home':
-        component = null;
+        component = Login;
         break;
       default:
 

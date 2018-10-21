@@ -1,13 +1,16 @@
 import React from 'react'
 //import PropTypes from 'prop-types'
-import Top from '../../../media/svg/top.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import Top from '../../../media/svg/top.svg'
+import { history, routes } from '../../../history.js'
+
 import './studentLogin.scss'
 
 class StudentLogin extends React.Component {
   state = {
     sessionID: '',
-    nickname: '',
+    userName: '',
     error: ''
   }
 
@@ -19,24 +22,31 @@ class StudentLogin extends React.Component {
       return true;
     }
 
-    if(this.state.nickname.length === 0) {
+    if(this.state.userName.length === 0) {
       this.setState({
-        error: 'Must enter a nickname'
+        error: 'Must enter a Username'
       })
       return true;
     }
-
-    this.setState({
-      sessionID: '',
-      nickname: ''
-    })
     return false;
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    if(this.checkFormError()) {
-      //Send fetch
+  handleSubmit = async(e) => {
+    e.preventDefault();//Prevent a form submit and page reload
+    if(!this.checkFormError()) {//No Error in filled form
+      //Check to make sure that that session exits
+      let response = await fetch(`http://138.68.55.179:8080/queues/get/${this.state.sessionID}`)
+      let data = await response.json();
+      if(data.length > 0) {//Good to go
+        this.props.setQueue(data[0])
+        this.props.setUserName(this.state.userName)
+        history.push(routes._HOME)
+      }
+      else {//Session not found or other error? IDK how backend responds
+        this.setState({
+          error: "Session not found"
+        })
+      }
     }
   }
 
@@ -68,12 +78,12 @@ class StudentLogin extends React.Component {
           />
           <br />
           <label>
-            Nickname:
+            UserName:
           </label>
           <input
-            name="nickname"
+            name="userName"
             type="text"
-            value={this.state.nickname}
+            value={this.state.userName}
             onChange={this.handleInputChange}
           />
 

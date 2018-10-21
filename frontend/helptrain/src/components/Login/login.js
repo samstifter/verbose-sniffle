@@ -4,22 +4,28 @@ import { Redirect } from "react-router-dom";
 
 import StudentLogin from './Student/studentLogin.js'
 import TALogin from './TA/taLogin.js'
+import { Util } from '../index.js'
 
 import './login.scss'
 
 const Login = (props) => {
-  let user = props.user;
-  if(user === 'TA') {
+  let userType = props.userType;
+  if(userType === 'TA') {
     return (
       <div className='loginPage'>
+        <Util.BackButton/>
         <TALogin/>
       </div>
     )
   }
-  else if(user === 'Student') {
+  else if(userType === 'Student') {
     return (
       <div className='loginPage'>
-        <StudentLogin/>
+        <Util.BackButton/>
+        <StudentLogin
+          setQueue={props.setQueue}
+          setUserName={props.setUserName}
+        />
       </div>
     )
   }
