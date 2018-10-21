@@ -44,8 +44,11 @@
   max-height: 400px;
 }
 .queueMember__Name {
-
+  margin-left: 10px;
 }
 .queueMember__Question {
 
+}
+h3 {
+  color: $secondary;
 }

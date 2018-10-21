@@ -34,7 +34,7 @@ class TAHome extends React.Component {
     let data = await response.json();
 
     if(data.length !== this.state.previousQueueLength) {
-      Notifier.start(`New Student: ${data[0].Name}`,`Question: ${data[0].Question}`,"","https://upload.wikimedia.org/wikipedia/commons/8/87/Google_Chrome_icon_%282011%29.png");
+      //Notifier.start(`New Student: ${data[0].Name}`,`Question: ${data[0].Question}`,"","https://upload.wikimedia.org/wikipedia/commons/8/87/Google_Chrome_icon_%282011%29.png");
     }
 
     this.setState({
@@ -45,7 +45,15 @@ class TAHome extends React.Component {
 
   deleteMember = async(id) => {
     console.log("deleteMember");
-    let response = await fetch(`http://138.68.55.179:8080/queuemembers/delete/${id}`)
+    let response = await fetch(`http://138.68.55.179:8080/queuemembers/delete/${id}`, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: {}
+    });
     this.fetchQueueMembers();
   }
 
@@ -98,7 +106,6 @@ class TAHome extends React.Component {
             </div>
           </div>
         </div>
-        <button onClick={this.notify}>Notify</button>
       </div>
     );
   }

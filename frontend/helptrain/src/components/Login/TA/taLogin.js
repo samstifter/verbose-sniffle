@@ -237,8 +237,9 @@ class TALogin extends React.Component {
         loginSessionState: '--success',
         sessionID: data.id
       })
-
-      this.props.setQueue(data[0])
+      let newData = data[0];
+      newData.ID = this.state.loginSessionID;
+      this.props.setQueue(newData)
       history.push(routes._HOME)
       //this.nextState();
     }
