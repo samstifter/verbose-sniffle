@@ -132,16 +132,16 @@ class TALogin extends React.Component {
     await this.stall(750);
 
 
-    if(!response.ok) {
-      console.error(response);
+    if(err) {
+      console.error(err);
 
       this.setState({
         postError: 'Error Creating Queue, Try again',
         createSessionState: '--error'
       })
     }
-    else if(err) {
-      console.error(err);
+    else if(!response.ok) {
+      console.error(response);
 
       this.setState({
         postError: 'Error Creating Queue, Try again',
