@@ -4,14 +4,13 @@ import { Router, Route, Switch } from "react-router-dom";
 
 //JS File Imports
 import { history, routes } from './history.js'
-import { Landing, Home, Login, About } from './components'
+import { Landing, Home, Login, About, Error404 } from './components'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrain, faUser,faArrowLeft, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons'
 
-
-import Demo from './components/Demo.js'
+import APITest from './components/APITest.js'
 //SASS Imports
 import './App.scss';
 
@@ -41,7 +40,6 @@ class App extends Component {
       userName: userName
     })
   }
-
   render() {
     const WrapLanding = () =>
     <Landing
@@ -70,6 +68,8 @@ class App extends Component {
             <Route exact path={routes._HOME} component={WrapHome}/>
             <Route exact path={routes._LOGIN} component={WrapLogin}/>
             <Route exact path={routes._ABOUT} component={About}/>
+            <Route exact path={routes._API} component={APITest}/>
+            <Route component={Error404}/>
           </Switch>
         </div>
       </Router>
