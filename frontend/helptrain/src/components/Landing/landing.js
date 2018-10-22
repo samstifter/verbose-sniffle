@@ -1,6 +1,11 @@
 import React from 'react'
-//import PropTypes from 'prop-types'
 import { Link } from "react-router-dom";
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+import * as userActions from '../../actions/userActions';
+import { User_Types } from '../../constants/userTypes.js'
+
 import { history, routes } from '../../history.js'
 
 import largeSVG from '../../media/svg/large_light.svg'
@@ -11,10 +16,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './landing.scss'
 
 class Landing extends React.Component {
-  navagete = (route,user) => {
-    //set student or ta
-    this.props.setUserType(user);
-    history.push(route);
+  navagete = (user) => {
+    this.props.userActions.setUserType(user);
+    history.push(routes._LOGIN);
   }
 
   render () {
@@ -26,8 +30,8 @@ class Landing extends React.Component {
           <div className='title'>HelpTrain</div>
           <p>I am a...</p>
           <div className='buttons'>
-            <button onClick={() => this.navagete(routes._LOGIN,'Student')}><span>Student</span></button>
-            <button onClick={() => this.navagete(routes._LOGIN,'TA')}><span>TA</span></button>
+            <button onClick={() => this.navagete(User_Types.Student)}><span>Student</span></button>
+            <button onClick={() => this.navagete(User_Types.TA)}><span>TA</span></button>
           </div>
           <Link to={routes._ABOUT}>What is this?</Link>
         </div>
@@ -42,4 +46,13 @@ class Landing extends React.Component {
   }
 }
 
-export default Landing;
+function mapDispatchToProps(dispatch) {
+  return {
+    userActions: bindActionCreators(userActions, dispatch)
+  };
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Landing);

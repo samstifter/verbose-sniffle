@@ -2,6 +2,8 @@ import React from 'react'
 //import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+import { QueueAPI } from '../../../api'
+
 import Top from '../../../media/svg/top.svg'
 import { history, routes } from '../../../history.js'
 
@@ -35,14 +37,17 @@ class StudentLogin extends React.Component {
     e.preventDefault();//Prevent a form submit and page reload
     if(!this.checkFormError()) {//No Error in filled form
       //Check to make sure that that session exits
+      /*
       let response = await fetch(`http://138.68.55.179:8080/queues/get/${this.state.sessionID}`)
       let data = await response.json();
-      if(data.length > 0) {//Good to go
-        this.props.setQueue(data[0])
+      */
+      let data = await QueueAPI.GetQueue(this.state.sessionID);
+      if(data !== null) {
+        this.props.setQueue(data)
         this.props.setUserName(this.state.userName)
         history.push(routes._HOME)
       }
-      else {//Session not found or other error? IDK how backend responds
+      else {//Session not found
         this.setState({
           error: "Session not found"
         })

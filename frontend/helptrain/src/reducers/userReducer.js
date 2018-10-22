@@ -1,12 +1,12 @@
 import initialState from './initialState';
-import { SET_USER_TYPE } from '../actions/actionTypes.js';
+import { UserActionTypes } from '../actions/';
 
-export default function User(state = initialState.user, action) {
+export function User(state = initialState.user, action) {
   switch (action.type) {
-    case SET_USER_TYPE:
-      console.log('Setting User Type to ' + action.payload);
-      state.user = action.payload;
-      return state;
+    case UserActionTypes.SET_USER_TYPE:
+      return { ...state, type: action.payload }
+    case UserActionTypes.SET_USER_NAME:
+      return { ...state, name: action.payload }
     default:
       return state;
   }

@@ -36,25 +36,7 @@ class TALogin extends React.Component {
     sessionPassword: null,
     loginSessionID: ''
   }
-
-  componentDidMount() {
-    /*
-    const copyBtn = document.querySelector(".copyIDText");
-
-    copyBtn.onclick = function() {
-      document.execCommand("copy");
-    }
-
-    copyBtn.addEventListener("copy", function(event) {
-      event.preventDefault();
-      if (event.clipboardData) {
-        event.clipboardData.setData("text/plain", this.state.sessionID);
-        console.log(event.clipboardData.getData("text"))
-      }
-    });
-    */
-  }
-
+  
   handleInputChange = (e) => {
     const target = e.target;
     const value = target.value;

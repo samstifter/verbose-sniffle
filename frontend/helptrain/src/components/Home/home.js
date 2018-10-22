@@ -1,9 +1,13 @@
 import React from 'react'
-//import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import StudentHome from './Student/studentHome.js'
 import TAHome from './TA/taHome.js'
 import { history, routes } from '../../history.js'
+
+import * as userActions from '../../actions/userActions';
+import { User_Types } from '../../constants/userTypes.js'
 
 import { Redirect } from "react-router-dom";
 
@@ -49,4 +53,19 @@ const Home = (props) => {
   )
 }
 
-export default Home;
+function mapStateToProps(state) {
+  return {
+    user: state.User
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    userActions: bindActionCreators(userActions, dispatch)
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

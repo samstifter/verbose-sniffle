@@ -6,7 +6,11 @@ export const GetQueue = async(QueueID) => {
       'Content-Type': 'application/json'
     }
   });
-  return await response.json();
+  let data = await response.json();
+  if(data.length > 0)
+    return data[0];
+  else
+    return null;
 }
 export const NewQueue = async(QueueName, QueueDescription, Email) => {
   let body = JSON.stringify({
