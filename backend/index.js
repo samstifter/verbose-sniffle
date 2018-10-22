@@ -6,14 +6,24 @@ var nodemailer = require('nodemailer');
 var generator = require('generate-password');
 var cors = require('cors');
 var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+
+//var io = require('socket.io')(server);
+
+var http = require('http');
+var https = require('https');
+var fs = require('fs');
+
+const options = {
+    cert: fs.readFileSync('/etc/letsencrypt/live/helptrain.space/fullchain.pem'),
+    key: fs.readFileSync('/etc/letsencrypt/live/helptrain.space/privkey.pem')
+};
+
+//app.listen(8080);
+https.createServer(options, app).listen(8080);
 
 var connection = mysql.createConnection(config.dbconfig);
 app.use(bodyParser.json());
 app.use(cors());
-
-server.listen(8080);
 
 function initializeTables () {
   query = 'CREATE TABLE IF NOT EXISTS Queue(\
@@ -171,12 +181,14 @@ app.put('/queues/update/(:id)', function(req, res) {
   })
 });
 
+/*
 io.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' });
   socket.on('my other event', function (data) {
     console.log(data);
   });
 });
+*/
 
 initializeTables();
 //app.listen(8080);
