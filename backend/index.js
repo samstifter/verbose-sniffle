@@ -6,9 +6,14 @@ var nodemailer = require('nodemailer');
 var generator = require('generate-password');
 var cors = require('cors');
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
 var connection = mysql.createConnection(config.dbconfig);
 app.use(bodyParser.json());
 app.use(cors());
+
+server.listen(8080);
 
 function initializeTables () {
   query = 'CREATE TABLE IF NOT EXISTS Queue(\
@@ -96,7 +101,7 @@ app.post('/queuemembers/new', function(req, res) {
 });
 
 //delete QueueMember
-app.post('/queuemembers/delete/(:id)', function(req, res) {
+app.delete('/queuemembers/delete/(:id)', function(req, res) {
   connection.query('DELETE FROM QueueMember WHERE id = ?', [req.params.id], function (err, results) {
     if(err) throw err;
     else {
@@ -142,7 +147,7 @@ app.post('/queues/new', function(req, res) {
 });
 
 //delete Queue
-app.post('/queues/delete/(:id)', function(req, res) {
+app.delete('/queues/delete/(:id)', function(req, res) {
   connection.query('DELETE FROM QueueMember WHERE QueueID = ?', [req.params.id], function (err, results) {
     if(err) throw err;
     else{
@@ -166,5 +171,12 @@ app.put('/queues/update/(:id)', function(req, res) {
   })
 });
 
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
+
 initializeTables();
-app.listen(8080);
+//app.listen(8080);
