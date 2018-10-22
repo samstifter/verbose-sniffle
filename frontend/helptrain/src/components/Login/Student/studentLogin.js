@@ -38,7 +38,7 @@ class StudentLogin extends React.Component {
     if(!this.checkFormError()) {//No Error in filled form
       //Check to make sure that that session exits
       /*
-      let response = await fetch(`http://138.68.55.179:8080/queues/get/${this.state.sessionID}`)
+      let response = await fetch(`https://138.68.55.179:8080/queues/get/${this.state.sessionID}`)
       let data = await response.json();
       */
       let data = await QueueAPI.GetQueue(this.state.sessionID);

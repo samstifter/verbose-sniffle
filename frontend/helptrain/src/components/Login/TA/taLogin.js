@@ -36,7 +36,7 @@ class TALogin extends React.Component {
     sessionPassword: null,
     loginSessionID: ''
   }
-  
+
   handleInputChange = (e) => {
     const target = e.target;
     const value = target.value;
@@ -109,7 +109,7 @@ class TALogin extends React.Component {
     })
 
     let err, response;
-    [err, response] = await to(fetch(`http://138.68.55.179:8080/queues/new/`, {
+    [err, response] = await to(fetch(`https://138.68.55.179:8080/queues/new/`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -193,7 +193,7 @@ class TALogin extends React.Component {
     let err, response;
 
 
-    [err, response] = await to(fetch(`http://138.68.55.179:8080/queues/get/${this.state.loginSessionID}`))
+    [err, response] = await to(fetch(`https://138.68.55.179:8080/queues/get/${this.state.loginSessionID}`))
 
     if(err) {
       console.error(err);

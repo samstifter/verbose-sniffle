@@ -28,7 +28,7 @@ class StudentHome extends React.Component {
   }
 
   fetchQueueMembers = async() => {
-    let response = await fetch(`http://138.68.55.179:8080/queuemembers/get/${this.props.queue.ID}`)
+    let response = await fetch(`https://138.68.55.179:8080/queuemembers/get/${this.props.queue.ID}`)
     let data = await response.json();
     console.log(data);
     this.setState({
@@ -46,7 +46,7 @@ class StudentHome extends React.Component {
       Question: this.state.question,
       QueueID: this.props.queue.ID
     })
-    let response = await fetch(`http://138.68.55.179:8080/queuemembers/new/`, {
+    let response = await fetch(`https://138.68.55.179:8080/queuemembers/new/`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

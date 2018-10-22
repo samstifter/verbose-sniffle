@@ -30,7 +30,7 @@ class TAHome extends React.Component {
 
 
     console.log("Fetching Queue");
-    let response = await fetch(`http://138.68.55.179:8080/queuemembers/get/${this.props.queue.ID}`)
+    let response = await fetch(`https://138.68.55.179:8080/queuemembers/get/${this.props.queue.ID}`)
     let data = await response.json();
 
     if(data.length !== this.state.previousQueueLength) {
@@ -45,7 +45,7 @@ class TAHome extends React.Component {
 
   deleteMember = async(id) => {
     console.log("deleteMember");
-    let response = await fetch(`http://138.68.55.179:8080/queuemembers/delete/${id}`, {
+    let response = await fetch(`https://138.68.55.179:8080/queuemembers/delete/${id}`, {
       method: 'POST',
       mode: 'no-cors',
       headers: {

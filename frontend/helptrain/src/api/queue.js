@@ -1,5 +1,5 @@
 export const GetQueue = async(QueueID) => {
-  let response = await fetch(`http://helptrain.space:8080/queues/get/${QueueID}`, {
+  let response = await fetch(`https://helptrain.space:8080/queues/get/${QueueID}`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -18,7 +18,7 @@ export const NewQueue = async(QueueName, QueueDescription, Email) => {
     Description: QueueDescription,
     Email: Email
   })
-  let response = await fetch(`http://helptrain.space:8080/queues/new/`, {
+  let response = await fetch(`https://helptrain.space:8080/queues/new/`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -33,7 +33,7 @@ export const UpdateQueue = async(QueueID, QueueName, QueueDescription) => {
     Name: QueueName,
     Description: QueueDescription
   })
-  let response = await fetch(`http://helptrain.space:8080/queues/update/${QueueID}`, {
+  let response = await fetch(`https://helptrain.space:8080/queues/update/${QueueID}`, {
     method: 'PUT',
     headers: {
       'Accept': 'application/json',
@@ -45,7 +45,7 @@ export const UpdateQueue = async(QueueID, QueueName, QueueDescription) => {
 }
 export const DeleteQueue = async(QueueID) => {
   let body = JSON.stringify({})
-  let response = await fetch(`http://helptrain.space:8080/queues/delete/${QueueID}`, {
+  let response = await fetch(`https://helptrain.space:8080/queues/delete/${QueueID}`, {
     method: 'DELETE',
     headers: {
       'Accept': 'application/json',
