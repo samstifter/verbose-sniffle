@@ -67,9 +67,9 @@ class APITest extends React.Component {
       console.error("QueueID must be 6 characters");
       return;
     }
-    let data = await QueueAPI.GetQueue(this.state.queueID);
+    let queue = await QueueAPI.GetQueue(this.state.queueID);
     console.log("=====GetQueue=====");
-    console.log(data);
+    console.log(queue);
   }
   newQueue = async() => {
     if(this.state.queueName.length === 0) {
@@ -81,9 +81,9 @@ class APITest extends React.Component {
       return;
     }
 
-    let data = await QueueAPI.NewQueue(this.state.queueName, this.state.queueDescription, this.state.email);
+    let queue = await QueueAPI.NewQueue(this.state.queueName, this.state.queueDescription, this.state.email);
     console.log("=====NewQueue=====");
-    console.log(data);
+    console.log(queue);
   }
   updateQueue = async() => {
     if(this.state.queueID.length !== 6) {

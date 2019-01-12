@@ -5,6 +5,8 @@ import Top from '../../../media/svg/top.svg'
 import { history, routes } from '../../../history.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+import { QueueAPI } from '../../../api'
+
 import './taLogin.scss'
 
 const LoginStateMachine = {
@@ -56,7 +58,7 @@ class TALogin extends React.Component {
   }
 
   nextState = () => {
-    console.log(this.transition(this.state.loginState,'NEXT'));
+    //console.log(this.transition(this.state.loginState,'NEXT'));
     this.setState({
       loginState: this.transition(this.state.loginState,'NEXT')
     })
@@ -66,10 +68,6 @@ class TALogin extends React.Component {
     this.setState({
       loginState: this.transition(this.state.loginState,'PREV')
     })
-  }
-
-  newSession = () => {
-    this.nextState();
   }
 
   createSession = async() => {
@@ -103,50 +101,26 @@ class TALogin extends React.Component {
       createSessionState: '--loading'
     })
 
-    let body = JSON.stringify({
-      Name: this.state.name,
-      Description: this.state.description
-    })
-
-    let err, response;
-    [err, response] = await to(fetch(`https://138.68.55.179:8080/queues/new/`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: body
-    }));
+    let queue = await QueueAPI.NewQueue(this.state.name,this.state.description,'');// TODO: SetEmail
 
     //Create a smll fake delay for .75
     await this.stall(750);
 
-
-    if(err) {
-      console.error(err);
-
-      this.setState({
-        postError: 'Error Creating Queue, Try again',
-        createSessionState: '--error'
-      })
-
-    }
-    else if(!response.ok) {
-      console.error(response);
+    if(queue.error) {
+      console.error(queue.error);
 
       this.setState({
         postError: 'Error Creating Queue, Try again',
         createSessionState: '--error'
       })
+
     }
     else {
-      //Good response
-      let data = await response.json();
-      console.log(data);
+      console.log(queue.data);
       this.setState({
         createSessionState: '--success',
-        sessionID: data.id,
-        sessionPassword: data.password
+        sessionID: queue.data.id,
+        sessionPassword: queue.data.password
       })
     }
   }
@@ -192,34 +166,22 @@ class TALogin extends React.Component {
     //================================Cant do anything with password to check==========================
     let err, response;
 
+    let queue = await QueueAPI.GetQueue(this.state.loginSessionID)
 
-    [err, response] = await to(fetch(`https://138.68.55.179:8080/queues/get/${this.state.loginSessionID}`))
-
-    if(err) {
-      console.error(err);
-
+    if(queue.error) {
+      console.error(queue.error);
       this.setState({
         postError: 'Error Getting Queue, Try again',
         createSessionState: '--error'
       })
     }
-    else if(!response.ok) {
-      console.error(response);
-
-      this.setState({
-        postError: 'Error Getting Queue, Try again',
-        loginSessionState: '--error'
-      })
-    }
     else {
       //Good response
-      let data = await response.json();
-      console.log(data[0]);
+      let newData = queue.data;
       this.setState({
         loginSessionState: '--success',
-        sessionID: data.id
+        sessionID: newData.id
       })
-      let newData = data[0];
       newData.ID = this.state.loginSessionID;
       this.props.setQueue(newData)
       history.push(routes._HOME)
@@ -246,8 +208,6 @@ class TALogin extends React.Component {
   }
 
   render () {
-    console.log("Login Sstatus");
-    console.log(this.state.loginState);
     let createButtonText;
     switch (this.state.createSessionState) {
       case '--success':
@@ -282,7 +242,7 @@ class TALogin extends React.Component {
       <React.Fragment>
         <h1>Choose</h1>
         <div className='taLoginBtns'>
-          <button onClick={this.newSession}>New Session</button>
+          <button onClick={this.nextState}>New Session</button>
           <button onClick={this.login}>Login</button>
         </div>
       </React.Fragment>
