@@ -20,8 +20,60 @@ const options = {
 
 //app.listen(8080);
 https.createServer(options, app).listen(8080);
+//=====================================================
+//var connection = mysql.createConnection(config.dbconfig);
+class Database {
+  constructor(config) {
+      this.reconnect(config);
+      this.config = config;
+  }
+  /*
+  query(sql, args) {
+      return new Promise((resolve, reject) => {
+          this.connection.query(sql, args, (err, rows) => {
+              if (err)
+                  return reject(err);
+              resolve(rows);
+          } );
+      } );
+  }
+  */
+  close() {
+      return new Promise((resolve, reject) => {
+          this.connection.end(err => {
+              if (err)
+                  return reject(err);
+              resolve();
+          } );
+      } );
+  }
+  reconnect(config) {
+    this.connection = mysql.createConnection( config ); // Recreate the connection, since
+                                                    // the old one cannot be reused.
+    this.connection.connect(function(err) {              // The server is either down
+      if(err) {                                     // or restarting (takes a while sometimes).
+        console.log('error when connecting to db:', err);
+        setTimeout(this.reconnect, 2000); // We introduce a delay before attempting to reconnect,
+      }                                     // to avoid a hot loop, and to allow our node script to
+    });                                     // process asynchronous requests in the meantime.
+                                            // If you're also serving http, display a 503 error.
+    this.connection.on('error', function(err) {
+      console.log('db error', err);
+      if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+        if(database != null)
+          database.reconnect(config);
+        else
+          console.error("Database not defined in reconnect!");
+        //this.reconnect(config);                         // lost due to either server restart, or a
+      } else {                                      // connnection idle timeout (the wait_timeout
+        throw err;                                  // server variable configures this)
+      }
+    });
+  }
+}
 
-var connection = mysql.createConnection(config.dbconfig);
+let database = new Database(config.dbconfig);
+//=====================================================
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -33,7 +85,7 @@ function initializeTables () {
     Password CHAR(10) NOT NULL,\
     PRIMARY KEY(id)\
   )';
-  connection.query(query, function (err, results) {
+  database.connection.query(query, function (err, results) {
     if (err) throw err;
   });
 
@@ -46,7 +98,7 @@ function initializeTables () {
     PRIMARY KEY(id),\
     FOREIGN KEY(QueueID) REFERENCES Queue(id)\
   );';
-  connection.query(query, function (err, results) {
+  database.connection.query(query, function (err, results) {
     if (err) throw err;
   });
 }
@@ -102,7 +154,7 @@ function sendEmail(email, passwordToSend) {
 // New Queue Member
 app.post('/queuemembers/new', function(req, res) {
   var query = "INSERT INTO QueueMember (Name, Question, QueueID) VALUES (?, ?, ?)"
-  connection.query(query, [req.body.Name, req.body.Question, req.body.QueueID], function(err, results) {
+  database.connection.query(query, [req.body.Name, req.body.Question, req.body.QueueID], function(err, results) {
     if (err) throw err;
     else {
       res.send('Added a Person!');
@@ -112,7 +164,7 @@ app.post('/queuemembers/new', function(req, res) {
 
 //delete QueueMember
 app.delete('/queuemembers/delete/(:id)', function(req, res) {
-  connection.query('DELETE FROM QueueMember WHERE id = ?', [req.params.id], function (err, results) {
+  database.connection.query('DELETE FROM QueueMember WHERE id = ?', [req.params.id], function (err, results) {
     if(err) throw err;
     else {
       res.send('Successfully deleted!')
@@ -124,7 +176,7 @@ app.delete('/queuemembers/delete/(:id)', function(req, res) {
 
 // Get members of a queue
 app.get('/queuemembers/get/(:QueueID)', function(req, res) {
-  connection.query('SELECT * FROM QueueMember m WHERE m.QueueID = ? ORDER BY TimeAdded ASC', [req.params.QueueID], function(err, results) {
+  database.connection.query('SELECT * FROM QueueMember m WHERE m.QueueID = ? ORDER BY TimeAdded ASC', [req.params.QueueID], function(err, results) {
     if (err) throw err;
     else {
       res.send(results);
@@ -134,7 +186,7 @@ app.get('/queuemembers/get/(:QueueID)', function(req, res) {
 
 // Get a Queue by ID
 app.get('/queues/get/(:id)', function(req, res) {
-  connection.query('SELECT * FROM Queue q WHERE q.id = ?', [req.params.id], function(err, results) {
+  database.connection.query('SELECT * FROM Queue q WHERE q.id = ?', [req.params.id], function(err, results) {
     if (err) throw err;
     else {
       res.send(results);
@@ -147,7 +199,7 @@ app.post('/queues/new', function(req, res) {
   var query = 'INSERT INTO Queue VALUES(?, ?, ?, ?)';
   var generatedId = generateQueueID();
   var generatedPassword = generatePassword();
-  connection.query(query, [generatedId, req.body.Name, req.body.Description, generatedPassword], function (err, results) {
+  database.connection.query(query, [generatedId, req.body.Name, req.body.Description, generatedPassword], function (err, results) {
     if(err) throw err;
       else{
         sendEmail(req.body.Email, generatedPassword)
@@ -158,10 +210,10 @@ app.post('/queues/new', function(req, res) {
 
 //delete Queue
 app.delete('/queues/delete/(:id)', function(req, res) {
-  connection.query('DELETE FROM QueueMember WHERE QueueID = ?', [req.params.id], function (err, results) {
+  database.connection.query('DELETE FROM QueueMember WHERE QueueID = ?', [req.params.id], function (err, results) {
     if(err) throw err;
     else{
-      connection.query('DELETE FROM Queue WHERE id = ?', [req.params.id], function (err, results) {
+      database.connection.query('DELETE FROM Queue WHERE id = ?', [req.params.id], function (err, results) {
         if(err) throw err;
           else{
             res.send("Successfully deleted a Queue!")
@@ -173,7 +225,7 @@ app.delete('/queues/delete/(:id)', function(req, res) {
 
 //update Queue
 app.put('/queues/update/(:id)', function(req, res) {
-  connection.query('UPDATE Queue SET Name = ?, Description  = ? WHERE id = ?', [req.body.Name, req.body.Description, req.param.id], function (err, results) {
+  database.connection.query('UPDATE Queue SET Name = ?, Description  = ? WHERE id = ?', [req.body.Name, req.body.Description, req.param.id], function (err, results) {
     if(err) throw err;
       else{
         res.send("Successfully updated a Queue!")
